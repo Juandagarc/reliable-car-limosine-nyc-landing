@@ -1,0 +1,41 @@
+# Reliable Limo — Apache config (cPanel / shared hosting)
+Options -Indexes
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Force HTTPS and non-www (single canonical host)
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^(.*)$ https://1reliablelimo.com/$1 [L,R=301]
+
+  # Old WordPress booking page -> live reservation system
+  RewriteRule ^booking/?$ https://book.mylimobiz.com/v4/vztravelcorp [L,R=302]
+  RewriteRule ^(reserve|reservations|book)/?$ https://book.mylimobiz.com/v4/vztravelcorp [L,R=302]
+
+  # Old WordPress URLs -> home
+  RewriteRule ^(home|sample-page|wp-login\.php|feed)/?$ / [L,R=301]
+  RewriteRule ^index\.html$ / [L,R=301]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+  <FilesMatch "\.(css|js|png|jpg|webp|avif|svg|ico|woff2)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(html|xml|txt|webmanifest)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript image/svg+xml application/json application/manifest+json text/xml application/xml text/plain
+</IfModule>
+
+AddType application/manifest+json .webmanifest
+AddType image/avif .avif
+AddType font/woff2 .woff2

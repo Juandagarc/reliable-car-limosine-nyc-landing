@@ -1,0 +1,5 @@
+# Netlify / Cloudflare Pages
+/booking          https://book.mylimobiz.com/v4/vztravelcorp  302
+/booking/         https://book.mylimobiz.com/v4/vztravelcorp  302
+/reserve          https://book.mylimobiz.com/v4/vztravelcorp  302
+/reservations     https://book.mylimobiz.com/v4/vztravelcorp  302
